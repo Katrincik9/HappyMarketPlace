@@ -6,6 +6,7 @@
   .header-toolbar {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     min-height: 80px;
     padding-inline: 16px;
   }
@@ -46,32 +47,23 @@
     letter-spacing: 2px;
   }
 
-  .mobile-menu-button {
-    margin-left: auto;
-    width: 44px;
-    height: 44px;
-    border: 1px solid #dfe8e3;
-    border-radius: 14px;
-  }
+  @media (min-width: 600px) {
+    .header-toolbar {
+      min-height: 100px;
+      padding-inline: 24px;
+    }
 
-  .mobile-drawer .MuiDrawer-paper {
-    padding: 24px 20px;
-  }
+    .brand-logo {
+      width: 60px;
+      height: 60px;
+    }
 
-  .drawer-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+    .brand-name {
+      font-size: 38px;
+    }
 
-  .drawer-description {
-    margin: 8px 0 24px;
-    color: #586d65;
-  }
-
-  .mobile-drawer .MuiListItemButton-root {
-    margin-top: 8px;
-    min-height: 52px;
-    border-radius: 12px;
+    .brand-caption {
+      font-size: 10px;
+    }
   }
 }

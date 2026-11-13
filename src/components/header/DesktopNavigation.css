@@ -1,0 +1,13 @@
+@layer app {
+  .desktop-navigation {
+    display: flex;
+    gap: 8px;
+  }
+
+  .desktop-navigation .MuiListItemButton-root {
+    min-width: 90px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    text-align: center;
+  }
+}

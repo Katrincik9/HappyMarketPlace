@@ -11,8 +11,22 @@
   }
 
   .app-footer {
-    padding: 24px 16px;
+    padding-block: 24px;
     border-top: 1px solid #e1e7df;
     color: #586d65;
+  }
+
+  .footer-content {
+    padding-inline: 16px;
+  }
+
+  @media (min-width: 600px) {
+    .main-content {
+      padding: 40px 24px 64px;
+    }
+
+    .footer-content {
+      padding-inline: 24px;
+    }
   }
 }
