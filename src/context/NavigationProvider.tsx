@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
-import type { NavigationPage } from '../types/navigation';
+import type { NavigationPage } from '../types/navigationTypes';
 import { NavigationContext } from './NavigationContext';
 
 function NavigationProvider({ children }: { children: ReactNode }) {
