@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import SvgIcon from '@mui/material/SvgIcon';
+import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import { navigationItems } from '../../constants/navigationItems';
 import { useNavigation } from '../../hooks/useNavigation';
@@ -25,9 +25,7 @@ function MobileNavigation() {
         <div className="drawer-heading">
           <Typography component="h2" variant="h6">Menu</Typography>
           <IconButton onClick={() => setMenuOpen(false)}>
-            <SvgIcon>
-              <path d="m6 6 12 12M6 18 18 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </SvgIcon>
+            <CloseIcon />
           </IconButton>
         </div>
         <Typography className="drawer-description">Guest</Typography>
