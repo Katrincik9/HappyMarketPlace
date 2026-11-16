@@ -1,0 +1,36 @@
+@layer app {
+  .product-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-image {
+    padding: 20px;
+    background: #eef3ed;
+  }
+
+  .product-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 12px;
+  }
+
+  .product-title,
+  .product-price {
+    font-weight: 700;
+  }
+
+  .product-rating {
+    display: flex;
+    gap: 8px;
+  }
+
+  .product-price {
+    margin-top: auto;
+  }
+
+  .product-cart-button {
+    margin: 0 20px 20px;
+  }
+}
