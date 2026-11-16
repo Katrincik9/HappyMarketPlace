@@ -22,8 +22,11 @@ Read these documents before planning or changing this project:
   navigation context must not become a replacement for business-state Redux.
 - Distinguish implemented code from planned architecture and pending verification.
   An installed dependency is not an implemented feature.
-- Preserve deliberate UI choices: category and the anonymous login caption are
-  currently hidden. Do not restore them without agreement.
+- Preserve deliberate UI choices: the anonymous login caption is removed.
+  Guest Add to cart stays enabled and opens a login-required dialog with Cancel
+  and Log in actions; Log in navigates to the Login page without adding an item.
+  Category is now shown above the title, and the original numeric rate accompanies
+  rounded stars and the parenthesized review count.
 - Follow confirmed policies in the overview: persistent randomly chosen admin,
   refresh-restored login, per-user persisted carts, USD, and Phase 3 URL routing
   replacing page-selection context. Discuss remaining edge cases, not these

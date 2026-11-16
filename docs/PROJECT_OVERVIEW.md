@@ -36,6 +36,8 @@ RTK Query is not the selected asynchronous approach.
 - Show title, price, description, category, image, original numeric rating, and stars.
 - Round whole stars: 3.4 becomes 3; 3.5 becomes 4. Keep the numeric rate unrounded.
 - Permit Add to cart only for authenticated users.
+- Keep the button enabled for guests, but open a login-required dialog instead
+  of mutating the cart. Offer Cancel and Log in; Log in opens the Login page.
 
 ### Cart
 
@@ -74,7 +76,7 @@ RTK Query is not the selected asynchronous approach.
 | Foundation | MUI, Emotion, CSS layers, custom palette/type, CssBaseline | Final visual/browser acceptance |
 | Shell | Header, asset logo, footer, main container, responsive spacing | Full responsive regression pass |
 | Navigation | Context-based page selection; separate desktop/mobile menus | URL router, role-aware navigation |
-| Products | Four local samples, SVG illustrations, reusable card, fluid grid | API, request states, original numeric rate |
+| Products | Four local samples, SVG illustrations, reusable card, category, numeric rate, fluid grid | API, request states, browser acceptance |
 | Cart and login | Separate heading-only page components | Forms, cart rows, behavior |
 | Admin | No page yet; selection policy agreed | Slider, role assignment, persistence |
 | State and requests | Navigation context and local drawer state | Redux store/slices/thunks, Axios services |
@@ -82,13 +84,13 @@ RTK Query is not the selected asynchronous approach.
 
 ### Deliberate UI changes and requirement gaps
 
-- Category stays in the data/type but is hidden on cards at the user's request.
-  This temporarily differs from the original category-display requirement.
+- Category is displayed above the product title as requested.
 - The anonymous login caption below Add to cart was removed by request.
-  Do not restore it automatically; decide later how to explain a disabled action.
-- Add to cart is currently disabled for everyone because authentication is absent.
-- Cards display rounded stars and review count in parentheses. Review count is
-  not the numeric rate; displaying the original rate is still outstanding.
+  A login-required dialog now explains the restriction after clicking the button.
+- Add to cart is enabled and opens that dialog for everyone while authentication
+  is absent. No cart mutation or automatic post-login addition is implemented.
+- Cards display rounded stars, the original numeric rate, and review count in
+  parentheses. Star rounding does not change the displayed numeric rate.
 - USD is confirmed; keep the existing en-US preview formatting unless changed.
 - Hero/intro copy, decorative placeholders, and the skip link were removed.
   Accessibility review remains a future acceptance task.
@@ -118,8 +120,8 @@ RTK Query is not the selected asynchronous approach.
 - Define session payload validation and handling of malformed/expired sessions,
   and what to do if a persisted admin ID no longer exists in fetched users.
   These edge cases do not change the confirmed persistence policies.
-- Category stays hidden for now; its return and anonymous Add to cart messaging
-  remain deferred. No decision to restore the removed caption has been made.
+- Guest Add to cart messaging is agreed and implemented as a dialog; keep the
+  removed inline caption absent.
 
 ## Out of scope initially
 
@@ -129,6 +131,6 @@ are optional extensions, not implied by the repeated-Add quantity requirement.
 
 ## Next milestone
 
-Finish Phase 2's missing product states and numeric rating, then obtain a visual
+Finish Phase 2's missing product states, then obtain a visual
 review across screen sizes. See the [roadmap](IMPLEMENTATION_PHASES.md) for the
 exact checklists. Continue one agreed step at a time.

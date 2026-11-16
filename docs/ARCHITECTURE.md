@@ -63,6 +63,9 @@ src/
 - Mobile navigation owns `menuOpen`. Desktop switching unmounts the drawer,
   resetting its state; scroll-lock/backdrop cleanup needs browser regression tests.
 - ProductsPage maps local samples to `ProductCard` props.
+- Each ProductCard currently owns its login-dialog visibility and uses
+  `useNavigation` to open Login. Guest Add to cart is enabled but never mutates
+  a cart; real authenticated additions will be connected in later phases.
 
 There are no URL routes, Redux provider/store, API services, or storage services
 in the current application. The brand is a native `href="/"` link and can reload

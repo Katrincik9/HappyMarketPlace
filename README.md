@@ -14,7 +14,8 @@ settings using [Fake Store API](https://fakestoreapi.com/).
 - Cart and Login page placeholders.
 
 API integration, Redux state management, authentication, cart behavior, and the
-admin page are not implemented yet. Add to cart is currently disabled.
+admin page are not implemented yet. Add to cart opens a login-required dialog
+with a link into the existing Login page; it does not add items yet.
 Detailed progress and remaining requirements are tracked in the
 [implementation phases](docs/IMPLEMENTATION_PHASES.md).
 

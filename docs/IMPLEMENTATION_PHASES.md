@@ -25,8 +25,7 @@ proposed approach and wait for user approval. Work one agreed step at a time.
 | 6. Admin integration | Not started | Admin UI, products thunk, settings/auth |
 | 7. Verification/polish | Incremental checks only; final pass pending | Relevant features implemented |
 
-**Next proposed step:** show the original numeric product rate separately from
-the review count, then build reviewable loading/error/empty states without an API.
+**Next proposed step:** build reviewable loading/error/empty states without an API.
 Confirm the next step before implementation.
 
 ## Phase 1 - Visual foundation and app shell
@@ -67,11 +66,12 @@ Do not add product or authentication behavior to finish this phase.
 - [x] Show image, title, description, and formatted preview USD price.
 - [x] Show rounded whole stars using `Math.round`.
 - [x] Show review count in parentheses.
-- [ ] Show the original numeric rating alongside stars; count does not replace rate.
-- [x] Keep Add to cart visible but disabled until behavior/auth exists.
-- [x] Hide category and remove the login caption as explicitly requested.
-- [ ] Resolve when category display should return to meet the original requirement.
-- [ ] Agree anonymous action messaging without restoring the removed caption blindly.
+- [x] Show the original numeric rating alongside stars; count does not replace rate.
+- [x] Keep Add to cart enabled and open a login-required dialog for guests.
+- [x] Display category above the title as requested.
+- [x] Remove the login caption as explicitly requested.
+- [x] Use a dialog with Cancel and Log in instead of restoring the inline caption.
+- [x] Close the dialog on cancellation/dismissal; Log in opens the existing Login page.
 
 ### 2.2 Layout and content extremes
 
@@ -198,7 +198,8 @@ coupling between catalogue visibility and cart contents.
 - [ ] Fetch users and persist the initial random admin user ID outside reducers/rendering.
 - [ ] Reuse that ID on refresh/login/logout and derive the role from stable user identity;
   do not present browser-local assignment as backend security.
-- [ ] Enable Add to cart only for authenticated users and guard its action path.
+- [ ] Let authenticated users add items; guests keep the enabled login-dialog
+  action without mutating the cart. Guard actual additions in the action path.
 - [ ] Enforce cart/admin route restrictions and role-aware navigation.
 - [ ] Logout clears the session and active cart view, preserves stored carts/admin ID,
   hides Cart, denies additions/access, and exits protected UI.
@@ -250,5 +251,5 @@ and documentation accurately describes the finished demo.
 ## First milestone
 
 **Responsive shell plus products UI with mock data.** The shell and cards exist,
-but request-state previews, original numeric rating, and browser acceptance remain.
+but request-state previews and browser acceptance remain.
 Do not treat mock cards alone as completion of the full products phase.
