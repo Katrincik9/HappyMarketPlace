@@ -77,7 +77,7 @@ RTK Query is not the selected asynchronous approach.
 | Shell | Header, asset logo, footer, main container, responsive spacing | Full responsive regression pass |
 | Navigation | Context-based page selection; separate desktop/mobile menus | URL router, role-aware navigation |
 | Products | Four local samples, SVG illustrations, reusable card, category, numeric rate, fluid grid | API, request states, browser acceptance |
-| Cart and login | Separate heading-only page components | Forms, cart rows, behavior |
+| Cart and login | Account form with React Hook Form validation and password toggle; Cart heading | Real login, invalid-credentials feedback, cart rows and behavior |
 | Admin | No page yet; selection policy agreed | Slider, role assignment, persistence |
 | State and requests | Navigation context and local drawer state | Redux store/slices/thunks, Axios services |
 | Validation | Build/lint have passed during implementation | Test runner and automated behavior tests |
@@ -92,6 +92,13 @@ RTK Query is not the selected asynchronous approach.
 - Cards display rounded stars, the original numeric rate, and review count in
   parentheses. Star rounding does not change the displayed numeric rate.
 - USD is confirmed; keep the existing en-US preview formatting unless changed.
+- The login screen is labeled Account in both menus. Its form uses `useForm`,
+  clears on leaving the page, and masks passwords with an eye-button toggle.
+  Incomplete submissions show required-field errors, including whitespace-only
+  usernames. Valid submission navigates to Products without checking credentials
+  or establishing a session. The mock-result selector was removed;
+  invalid-credentials clearing and feedback remain pending. No credentials
+  are persisted by the application.
 - Hero/intro copy, decorative placeholders, and the skip link were removed.
   Accessibility review remains a future acceptance task.
 

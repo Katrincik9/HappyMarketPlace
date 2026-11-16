@@ -9,9 +9,10 @@ settings using [Fake Store API](https://fakestoreapi.com/).
 
 - MUI theme, plain CSS, and CSS cascade layers configured.
 - Responsive header, logo, mobile/desktop navigation, and shared page layout.
-- Navigation context for switching between Products, Cart, and Login.
+- Navigation context for switching between Products, Cart, and Account.
 - Reusable product cards and a responsive grid using four local mock products.
-- Cart and Login page placeholders.
+- Account form using React Hook Form for required-field validation, with a
+  password visibility toggle; Cart page placeholder.
 
 API integration, Redux state management, authentication, cart behavior, and the
 admin page are not implemented yet. Add to cart opens a login-required dialog

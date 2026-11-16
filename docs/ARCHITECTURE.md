@@ -63,6 +63,12 @@ src/
 - Mobile navigation owns `menuOpen`. Desktop switching unmounts the drawer,
   resetting its state; scroll-lock/backdrop cleanup needs browser regression tests.
 - ProductsPage maps local samples to `ProductCard` props.
+- LoginPage is labeled Account in navigation. React Hook Form's `useForm`
+  manages local field values and required-field errors; `register` connects MUI
+  inputs through `inputRef`. Password visibility remains component state.
+  Switching pages unmounts the form and discards its state. Valid submission
+  navigates to Products without checking credentials or creating a session.
+  The mock-result selector was removed; invalid-credentials handling is pending.
 - Each ProductCard currently owns its login-dialog visibility and uses
   `useNavigation` to open Login. Guest Add to cart is enabled but never mutates
   a cart; real authenticated additions will be connected in later phases.

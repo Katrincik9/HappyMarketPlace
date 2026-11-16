@@ -19,14 +19,15 @@ proposed approach and wait for user approval. Work one agreed step at a time.
 | --- | --- | --- |
 | 1. Foundation/shell | Implemented; final browser acceptance pending | None |
 | 2. Products UI | In progress | Foundation |
-| 3. Remaining interfaces | Heading-only Cart/Login; most work pending | Shared shell and UI conventions |
+| 3. Remaining interfaces | Account form UI implemented; Cart heading; other work pending | Shared shell and UI conventions |
 | 4. Redux/local behavior | Not started; dependencies installed | Product/cart/settings UI contracts |
 | 5. API/auth | Not started | Redux and agreed session/role policies |
 | 6. Admin integration | Not started | Admin UI, products thunk, settings/auth |
 | 7. Verification/polish | Incremental checks only; final pass pending | Relevant features implemented |
 
-**Next proposed step:** build reviewable loading/error/empty states without an API.
-Confirm the next step before implementation.
+**Current agreed step:** refactor Account form validation to React Hook Form.
+Catalogue loading/error/empty states remain pending. Confirm subsequent steps
+before implementation.
 
 ## Phase 1 - Visual foundation and app shell
 
@@ -100,10 +101,20 @@ mock data, and temporary requirement omissions are explicitly agreed.
 ### 3.1 Login
 
 - [x] Create a separate LoginPage with heading.
-- [ ] Add labeled username/password fields and a submit control.
-- [ ] Show required-field validation without sending requests.
-- [ ] Preview pending submission and invalid-credentials states.
-- [ ] Disable repeat submission while pending; decide password visibility UX.
+- [x] Add labeled username/password fields and a submit control.
+- [x] Label the login destination Account in desktop/mobile navigation.
+- [x] Show required-field validation without sending requests.
+- [x] Manage local fields and validation through React Hook Form's `useForm`.
+- [x] Mask passwords by default and provide an accessible visibility toggle.
+- [x] Discard form fields and errors when navigating away.
+- [x] Explicitly preview success by navigating to Products without creating a session.
+- [ ] Clear fields and show a red alert for incorrect credentials. The earlier
+  mock-result selector was removed; real credential checking is not implemented.
+- [ ] Preview pending submission and disable repeat submission while pending.
+- [x] Reverify missing-field validation, whitespace-only username rejection,
+  password toggle, Enter submission, and page reset after the `useForm` refactor.
+- [x] Verify form controls fit without page horizontal overflow at 300, 390,
+  768, and 1280px; final visual/accessibility review remains in Phase 7.
 
 ### 3.2 Cart
 

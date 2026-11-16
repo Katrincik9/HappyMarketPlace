@@ -1,0 +1,24 @@
+@layer app {
+  .login-panel {
+    width: 100%;
+    max-width: 440px;
+    margin-inline: auto;
+    padding: 20px;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .login-form input[type='password']::-ms-reveal {
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    .login-panel {
+      padding: 32px;
+    }
+  }
+}
