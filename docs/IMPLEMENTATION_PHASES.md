@@ -19,13 +19,14 @@ proposed approach and wait for user approval. Work one agreed step at a time.
 | --- | --- | --- |
 | 1. Foundation/shell | Implemented; final browser acceptance pending | None |
 | 2. Products UI | In progress | Foundation |
-| 3. Remaining interfaces | Account form UI implemented; Cart heading; other work pending | Shared shell and UI conventions |
-| 4. Redux/local behavior | Not started; dependencies installed | Product/cart/settings UI contracts |
+| 3. Remaining interfaces | Account form and interactive cart implemented; Admin/routing pending | Shared shell and UI conventions |
+| 4. Redux/local behavior | Cart store, actions, selectors, and hooks implemented early | Product/cart/settings UI contracts |
 | 5. API/auth | Not started | Redux and agreed session/role policies |
 | 6. Admin integration | Not started | Admin UI, products thunk, settings/auth |
 | 7. Verification/polish | Incremental checks only; final pass pending | Relevant features implemented |
 
-**Current agreed step:** refactor Account form validation to React Hook Form.
+**Current agreed step:** cart UI and Redux interactions, assuming a logged-in
+demo user temporarily. Minus at one removes the item; Buy is enabled but inert.
 Catalogue loading/error/empty states remain pending. Confirm subsequent steps
 before implementation.
 
@@ -119,12 +120,16 @@ mock data, and temporary requirement omissions are explicitly agreed.
 ### 3.2 Cart
 
 - [x] Create a separate CartPage with heading.
-- [ ] Build compact rows from temporary cart data: image/title, unit price,
-  quantity, and line total.
-- [ ] Show cart total and an empty-cart state.
-- [ ] Do not render Add to cart inside cart rows.
-- [ ] Show Buy as clearly unavailable; do not simulate a purchase.
-- [ ] Review responsive row/summary layout before connecting behavior.
+- [x] Build compact rows with image/category/title, unit price, quantity, and subtotal.
+- [x] Show cart total and an empty-cart state.
+- [x] Omit rating, description, and Add to cart from cart rows.
+- [x] Add plus/minus controls and a delete icon; minus at one removes the item.
+- [x] Keep one product per row in a vertical list.
+- [x] Keep Buy enabled with no action as requested; explain checkout is not implemented.
+- [x] Verify responsive rows at 300/390/768/1280px and browser DOM-event flows
+  for additions, quantities, totals, deletion, enabled inert Buy, and empty state.
+  Normal pointer/resize checks remain pending: the embedded browser was hidden
+  and required dispatched click events and reloads at each viewport.
 
 ### 3.3 Admin
 
@@ -150,7 +155,7 @@ mock data, and temporary requirement omissions are explicitly agreed.
 
 ### 4.1 Foundation
 
-- [ ] Configure Redux Toolkit store, React Redux Provider, and typed hooks.
+- [x] Configure Redux Toolkit store, React Redux Provider, and typed hooks.
 - [ ] Define products, cart, auth-preview/session, and settings contracts as needed.
 - [ ] Add slices/selectors without API or local-storage side effects in reducers.
 - [ ] Keep input state, drawer state, and slider draft state local.
@@ -160,14 +165,16 @@ mock data, and temporary requirement omissions are explicitly agreed.
 
 - [ ] Supply catalogue data through Redux while retaining the same ProductCard API.
 - [ ] Add a typed Add to cart intent; check authenticated/demo-preview eligibility.
-- [ ] Increment quantity on repeated additions using product identity.
-- [ ] Store cart display snapshots independent of currently visible products.
-- [ ] Derive item quantities, line totals, and total; calculate money in minor units.
-- [ ] Connect CartPage and empty state to selectors.
+- [x] Increment quantity on repeated additions using product identity.
+- [x] Store cart display snapshots independent of currently visible products.
+- [x] Derive line totals and total; calculate money in integer cents.
+- [x] Connect CartPage and empty state to selectors.
+- [x] Add focused Node reducer tests for repeated adds, quantity controls,
+  minus-at-one removal, deletion, and exact totals.
 - [x] Confirm per-user persisted carts; logout hides/blocks Cart without deleting it.
 - [ ] Implement user-keyed cart persistence and restore only the active user's cart.
 - [ ] Hide Cart from guest navigation; guard direct access and additions.
-- [ ] Test repeated adds, multiple products, exact totals, and guest rejection.
+- [ ] Test guest rejection once authentication replaces the logged-in demo assumption.
 
 ### 4.3 Settings
 

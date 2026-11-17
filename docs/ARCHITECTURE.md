@@ -46,10 +46,13 @@ src/
     header/                       Header, DesktopNavigation, MobileNavigation
     pages/                        ProductsPage, CartPage, LoginPage, page CSS
     productCard/                  prop-driven ProductCard and its CSS
+    cartItemCard/                 compact cart row and quantity/removal controls
   constants/                      mockProducts and navigationItems
   context/                        NavigationContext and NavigationProvider
   hooks/                          useNavigation
   types/                          navigationTypes and productTypes
+  store/                          Redux store, cart slice, cart selectors
+  utils/                          shared USD currency formatting
 ```
 
 ### Current UI communication
@@ -69,11 +72,14 @@ src/
   Switching pages unmounts the form and discards its state. Valid submission
   navigates to Products without checking credentials or creating a session.
   The mock-result selector was removed; invalid-credentials handling is pending.
-- Each ProductCard currently owns its login-dialog visibility and uses
-  `useNavigation` to open Login. Guest Add to cart is enabled but never mutates
-  a cart; real authenticated additions will be connected in later phases.
+- ProductCard dispatches Redux `addItem`. CartPage selects cart items and the
+  derived total; CartItemCard dispatches quantity/removal actions.
+- For this approved preview, assume a logged-in demo user. No real session or
+  guest checks exist yet; restore the guest login dialog when auth is connected.
+- `main.tsx` provides the Redux store. Cart stores only display snapshots,
+  integer unit-price cents, and quantities. It survives page changes but not refresh.
 
-There are no URL routes, Redux provider/store, API services, or storage services
+There are no URL routes, API services, or storage services
 in the current application. The brand is a native `href="/"` link and can reload
 the app; align it with router navigation when routing is introduced.
 
@@ -87,7 +93,7 @@ the app; align it with router navigation when routing is introduced.
 | Form fields, password visibility | Local component state | UI-only input state; never persist passwords |
 | Products/request status | Redux, planned | Shared data and asynchronous lifecycle |
 | Auth/token/demo role | Redux, planned | Shared access and session state |
-| Cart | Redux, planned | Quantities and totals shared across pages |
+| Cart | Redux | Quantities and totals shared across pages; total derived in cents |
 | Committed product limit | Redux, planned | Shared setting affecting API requests |
 | Slider draft during dragging | Local state, planned | Avoid request storms |
 
@@ -222,9 +228,13 @@ extend it, not rebuild the shell by default.
 
 ## 8. Verification boundaries
 
+Cart reducer tests run with `node --test tests/cartSlice.test.ts` on Node 24.
+They cover duplicate additions, quantity changes, removal, display snapshots,
+and integer-cent totals without adding a test framework.
+
 Test reducers/selectors and async outcomes, not MUI or React internals.
 Cover rounding thresholds, quantities/money, auth transitions, slider limits,
 and stale results. Browser checks must cover breakpoint boundaries, long product
 content, menu selection, resize while open, and scroll-lock cleanup.
-No automated behavior test suite exists yet; see Phase 7 and incremental checks
+No broader automated behavior test framework exists yet; see Phase 7 and incremental checks
 in the [roadmap](IMPLEMENTATION_PHASES.md).

@@ -1,23 +1,27 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+// import Dialog from '@mui/material/Dialog';
+// import DialogActions from '@mui/material/DialogActions';
+// import DialogContent from '@mui/material/DialogContent';
+// import DialogContentText from '@mui/material/DialogContentText';
+// import DialogTitle from '@mui/material/DialogTitle';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import type { ProductCardProps } from '../../types/productTypes';
-import { useNavigation } from '../../hooks/useNavigation';
+// import { useNavigation } from '../../hooks/useNavigation';
+import { useAppDispatch } from '../../hooks/useStore';
+import { addItem } from '../../store/cartSlice';
 import './ProductCard.css';
+import { formatCurrency } from '../../services/currency';
 
 function ProductCard({ product }: ProductCardProps) {
-  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
-  const { onNavigate } = useNavigation();
+  // const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+  // const { onNavigate } = useNavigation();
+  const dispatch = useAppDispatch();
 
   return (
     <Card component="article" variant="outlined" className="product-card">
@@ -38,19 +42,20 @@ function ProductCard({ product }: ProductCardProps) {
           {product.description}
         </Typography>
         <Typography component="p" variant="h6" className="product-price">
-          {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.price)}
+          {formatCurrency(Math.round(product.price * 100))}
         </Typography>
       </CardContent>
       <Button
         className="product-cart-button"
         variant="contained"
         startIcon={<AddShoppingCartIcon />}
-        onClick={() => setLoginDialogOpen(true)}
+        // onClick={() => setLoginDialogOpen(true)}
+        onClick={() => dispatch(addItem(product))}
       >
         Add to cart
       </Button>
 
-      <Dialog
+      {/* <Dialog
         open={loginDialogOpen}
         onClose={() => setLoginDialogOpen(false)}
       >
@@ -70,7 +75,7 @@ function ProductCard({ product }: ProductCardProps) {
             Log in
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </Card>
   );
 }

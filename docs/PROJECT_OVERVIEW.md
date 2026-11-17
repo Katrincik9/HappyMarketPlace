@@ -23,8 +23,9 @@ The root [AGENTS.md](../AGENTS.md) is the coding-assistant entry point.
 - Extensive use of Material UI, customized primary and secondary theme colors.
 - Plain CSS only; mobile-first rules and MUI CSS cascade layers.
 
-Redux Toolkit, React Redux, and redux-persist are installed, but not integrated.
-Axios, routing, and automated test tooling are not installed at this checkpoint.
+Redux Toolkit and React Redux power the in-memory cart; redux-persist remains unused.
+Axios, routing, and additional test frameworks are not installed at this checkpoint.
+Cart reducer tests use Node's built-in test runner.
 Redux Toolkit's default thunk middleware can satisfy the Redux Thunk requirement;
 RTK Query is not the selected asynchronous approach.
 
@@ -44,7 +45,10 @@ RTK Query is not the selected asynchronous approach.
 - Show added products in a compact form, without an Add to cart button.
 - Repeated additions increment quantity rather than duplicate product rows.
 - Show quantity per item and a total based on unit price times quantity.
-- Show a Buy control without checkout functionality initially.
+- Include plus/minus quantity controls and a delete icon. Minus at one removes
+  the item. Show image, category, title, unit price, and subtotal in one row per
+  product; omit rating and description.
+- Show an enabled Buy control without checkout functionality initially.
 - Backend cart endpoints are not required for this scope.
 - Persist a separate cart per user across logout/login and refresh. Hide Cart
   from anonymous navigation and block direct access and additions when logged out.
@@ -77,18 +81,22 @@ RTK Query is not the selected asynchronous approach.
 | Shell | Header, asset logo, footer, main container, responsive spacing | Full responsive regression pass |
 | Navigation | Context-based page selection; separate desktop/mobile menus | URL router, role-aware navigation |
 | Products | Four local samples, SVG illustrations, reusable card, category, numeric rate, fluid grid | API, request states, browser acceptance |
-| Cart and login | Account form with React Hook Form validation and password toggle; Cart heading | Real login, invalid-credentials feedback, cart rows and behavior |
+| Cart and login | Account form; Redux cart rows, quantity controls, removal, totals, empty state | Real login, invalid-credentials feedback, per-user cart persistence |
 | Admin | No page yet; selection policy agreed | Slider, role assignment, persistence |
-| State and requests | Navigation context and local drawer state | Redux store/slices/thunks, Axios services |
-| Validation | Build/lint have passed during implementation | Test runner and automated behavior tests |
+| State and requests | Navigation context, local drawer state, Redux cart store and typed hooks | API thunks, auth/settings slices, Axios services |
+| Validation | Build/lint during implementation; focused Node cart reducer tests | Broader automated behavior tests and final browser acceptance |
 
 ### Deliberate UI changes and requirement gaps
 
 - Category is displayed above the product title as requested.
 - The anonymous login caption below Add to cart was removed by request.
   A login-required dialog now explains the restriction after clicking the button.
-- Add to cart is enabled and opens that dialog for everyone while authentication
-  is absent. No cart mutation or automatic post-login addition is implemented.
+- Current approved exception: assume a logged-in demo user while implementing
+  the cart. Add to cart directly updates Redux without the guest dialog.
+  This does not create an authenticated session. Guest access restrictions and
+  the login-required dialog must return with real authentication.
+- Cart survives page changes but is in memory only and resets on refresh.
+  Per-user persistence remains required later.
 - Cards display rounded stars, the original numeric rate, and review count in
   parentheses. Star rounding does not change the displayed numeric rate.
 - USD is confirmed; keep the existing en-US preview formatting unless changed.
@@ -133,8 +141,8 @@ RTK Query is not the selected asynchronous approach.
 ## Out of scope initially
 
 Real payments/orders, registration, product CRUD, a custom backend, search,
-filters, and backend cart synchronization. Removal and manual quantity editing
-are optional extensions, not implied by the repeated-Add quantity requirement.
+filters, and backend cart synchronization. Removal and plus/minus quantity
+editing are now explicitly requested cart features.
 
 ## Next milestone
 

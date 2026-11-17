@@ -1,0 +1,9 @@
+@layer app {
+  .cart-summary {
+    padding: 10px 20px;
+  }
+
+  .cart-buy-btn {
+    margin-top: 10px;
+  }
+}

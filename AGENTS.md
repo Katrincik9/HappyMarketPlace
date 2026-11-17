@@ -23,8 +23,11 @@ Read these documents before planning or changing this project:
 - Distinguish implemented code from planned architecture and pending verification.
   An installed dependency is not an implemented feature.
 - Preserve deliberate UI choices: the anonymous login caption is removed.
-  Guest Add to cart stays enabled and opens a login-required dialog with Cancel
-  and Log in actions; Log in navigates to the Login page without adding an item.
+  For the current cart preview, assume a logged-in demo user and add directly
+  through Redux. This is not authentication; do not persist a fabricated session.
+  When real authentication is added, restore the agreed guest login dialog with
+  Cancel and Log in actions instead of allowing guest cart additions.
+  Cart minus at quantity 1 removes the item. Buy is enabled but has no action.
   Category is now shown above the title, and the original numeric rate accompanies
   rounded stars and the parenthesized review count.
 - Follow confirmed policies in the overview: persistent randomly chosen admin,
@@ -53,8 +56,9 @@ Read these documents before planning or changing this project:
 - Use `npm run lint` and `npm run build` for implementation changes, selecting
   smaller checks when sufficient. `npm run dev` starts development;
   `npm run preview` serves the production build.
-- No automated test runner is currently configured. Add focused behavioral tests
-  with suitable tooling when the implementation step requires them.
+- Cart reducer tests use Node's built-in runner:
+  `node --test tests/cartSlice.test.ts` (Node 24 supports TypeScript stripping).
+  No additional test framework is installed.
 - Verify responsive and interactive behavior in a browser; build success alone
   is not evidence that layouts, focus, or drawer cleanup work.
 - Documentation-only edits do not require a build. Check local links and accuracy.
