@@ -1,4 +1,4 @@
-export type NavigationPage = 'products' | 'cart' | 'login';
+export type NavigationPage = 'products' | 'cart' | 'login' | 'admin';
 
 export type NavigationItem = {
   page: NavigationPage;

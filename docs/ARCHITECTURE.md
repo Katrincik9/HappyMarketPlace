@@ -39,25 +39,26 @@ and admin limit changes call the products API. Do not invent `/admin` requests.
 ```text
 src/
   App.tsx                         shared layout and page-component selection
-  main.tsx                        styling/theme/navigation providers
+  main.tsx                        styling/theme/Redux providers, PersistGate, navigation
   theme.ts                        MUI design defaults
   assets/                         logo and sample product SVGs
   components/
     header/                       Header, DesktopNavigation, MobileNavigation
-    pages/                        ProductsPage, CartPage, LoginPage, page CSS
+    pages/                        ProductsPage, CartPage, LoginPage, AdminPage, page CSS
     productCard/                  prop-driven ProductCard and its CSS
     cartItemCard/                 compact cart row and quantity/removal controls
   constants/                      mockProducts and navigationItems
   context/                        NavigationContext and NavigationProvider
   hooks/                          useNavigation
   types/                          navigationTypes and productTypes
-  store/                          Redux store, cart slice, cart selectors
-  utils/                          shared USD currency formatting
+  store/                          Redux store, cart/settings slices, redux-persist config
+  services/                       USD formatting
 ```
 
 ### Current UI communication
 
-- `main.tsx` wraps `App` in `NavigationProvider`.
+- `main.tsx` wraps navigation/App in Redux Provider and PersistGate, waiting for
+  saved settings before rendering. NavigationProvider still owns page selection.
 - The provider owns `activePage` and exposes `onNavigate`.
 - `useNavigation` reads the context and throws if used outside its provider.
 - `App` selects the page component from `activePage`.
@@ -65,7 +66,19 @@ src/
 - `Header` uses MUI `useMediaQuery` to mount one menu at the desktop breakpoint.
 - Mobile navigation owns `menuOpen`. Desktop switching unmounts the drawer,
   resetting its state; scroll-lock/backdrop cleanup needs browser regression tests.
-- ProductsPage maps local samples to `ProductCard` props.
+- ProductsPage maps the first `settings` samples (the numeric product limit) to `ProductCard`
+  props. There are 20 distinct mock entries reusing four local illustrations.
+- AdminPage owns the slider draft and dispatches committed integer changes.
+  redux-persist wraps the combined root reducer with a settings-only whitelist;
+  reducers never access storage. PersistGate waits for restoration before the
+  first app render. Settings state is a number, not an object; its reducer
+  validates committed limits and returns the new number.
+  The minimal persistence config contains only the key, storage adapter, and
+  settings whitelist. There is no restoration transform, custom error middleware,
+  or `writeFailHandler`. Restored settings are not validated by the slice reducer.
+  Redux Toolkit's default middleware remains enabled without persistence-action
+  exclusions; lifecycle serializability warnings still need review.
+  No settings notice state or alerts are present.
 - LoginPage is labeled Account in navigation. React Hook Form's `useForm`
   manages local field values and required-field errors; `register` connects MUI
   inputs through `inputRef`. Password visibility remains component state.
@@ -79,7 +92,7 @@ src/
 - `main.tsx` provides the Redux store. Cart stores only display snapshots,
   integer unit-price cents, and quantities. It survives page changes but not refresh.
 
-There are no URL routes, API services, or storage services
+There are no URL routes or API services
 in the current application. The brand is a native `href="/"` link and can reload
 the app; align it with router navigation when routing is introduced.
 
@@ -93,9 +106,9 @@ the app; align it with router navigation when routing is introduced.
 | Form fields, password visibility | Local component state | UI-only input state; never persist passwords |
 | Products/request status | Redux, planned | Shared data and asynchronous lifecycle |
 | Auth/token/demo role | Redux, planned | Shared access and session state |
-| Cart | Redux | Quantities and totals shared across pages; total derived in cents |
-| Committed product limit | Redux, planned | Shared setting affecting API requests |
-| Slider draft during dragging | Local state, planned | Avoid request storms |
+| Cart | Redux, in memory only | Quantities and totals shared across pages; total derived in cents |
+| Committed product limit | Redux settings slice | Shared persisted setting; limits mocks now, API later |
+| Slider draft during dragging | AdminPage local state | Apply/persist only on committed changes |
 
 Navigation context must not grow into a general replacement for required Redux.
 Phase 3's approved direction is to replace active-page context with URL routing.
@@ -147,6 +160,9 @@ calculations; do not maintain a separately mutable total.
 Persist carts by stable user ID. On logout, clear the active in-memory view and
 block access/additions, but preserve saved carts; account switching restores only
 the new user's cart. Wait for session restoration before selecting a saved cart.
+This is future behavior: for now keep `whitelist: ['settings']`. Simply adding
+`cart` would save one shared browser cart, not separate user carts. Removing the
+whitelist would also opt future root slices into persistence unintentionally.
 
 ## 5. API models versus application models
 
@@ -206,8 +222,12 @@ extend it, not rebuild the shell by default.
 ## 7. Persistence, authorization, and errors
 
 - Required persistence: login token with minimum user identity metadata, separate
-  carts by user ID, selected admin user ID, and product limit. Storage schema and
-  mechanism will be defined during implementation; redux-persist is not integrated.
+  carts by user ID, selected admin user ID, and product limit. Only the product
+  limit is implemented using redux-persist under `persist:happy-marketplace`.
+  Only the numeric `settings` slice and redux-persist metadata are stored.
+  Cart remains in memory. The old `happy-marketplace.product-limit` key is
+  ignored, not migrated; the new format starts at 20 as agreed. Other persisted
+  session/cart data remains future work.
 - Restore login on refresh and resolve the user's cart/role before exposing
   protected UI. Validate stored session data; define invalid/expired handling
   explicitly before implementation.
@@ -218,8 +238,12 @@ extend it, not rebuild the shell by default.
   browsers do not share the role assignment.
 - Logout removes the active session, hides Cart, blocks cart routes/actions,
   and clears the active cart view. Preserve stored per-user carts and admin ID.
-- Read/validate persisted data during initialization. Reject invalid limit values;
-  choose and document a default in the 10-20 range before implementation.
+- The reducer accepts only integer committed limits from 10 to 20 and rejects
+  invalid updates with a RangeError. Missing saved settings use the initial 20.
+  Validation on restoration and explicit persistence-failure handling remain
+  pending; do not assume reducer validation also checks rehydrated state.
+- Admin is visible to everyone during this approved preview. Real role selection
+  and access checks remain required later.
 - Route guards and guarded actions must accompany hidden/disabled UI controls.
   Client-side roles are demo restrictions, not a secure backend boundary.
 - A failed request must produce a visible error/retry path, not an empty
@@ -228,9 +252,10 @@ extend it, not rebuild the shell by default.
 
 ## 8. Verification boundaries
 
-Cart reducer tests run with `node --test tests/cartSlice.test.ts` on Node 24.
-They cover duplicate additions, quantity changes, removal, display snapshots,
-and integer-cent totals without adding a test framework.
+No automated test framework is currently configured. Verify limits, restoration,
+malformed storage, invalid updates, and storage failures when changing settings.
+Normal persistence has been browser-checked; the removed restoration/error
+safeguards must not be counted as current functionality.
 
 Test reducers/selectors and async outcomes, not MUI or React internals.
 Cover rounding thresholds, quantities/money, auth transitions, slider limits,

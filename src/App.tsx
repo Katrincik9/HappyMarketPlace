@@ -5,12 +5,14 @@ import { useNavigation } from './hooks/useNavigation';
 import ProductsPage from './components/pages/ProductsPage';
 import CartPage from './components/pages/CartPage';
 import LoginPage from './components/pages/LoginPage';
+import AdminPage from './components/pages/AdminPage';
 import './App.css';
 
 const pages = {
   products: ProductsPage,
   cart: CartPage,
   login: LoginPage,
+  admin: AdminPage,
 };
 
 function App() {

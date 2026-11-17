@@ -28,6 +28,14 @@ Read these documents before planning or changing this project:
   When real authentication is added, restore the agreed guest login dialog with
   Cancel and Log in actions instead of allowing guest cart additions.
   Cart minus at quantity 1 removes the item. Buy is enabled but has no action.
+  Admin is temporarily visible to everyone. Its 10-20 product-limit slider
+  defaults to 20, commits on release, and persists through redux-persist.
+  Only settings is persisted; cart and form fields are not. PersistGate waits
+  for restoration before rendering. Settings state is a numeric product limit.
+  The reducer validates committed changes; restored-data validation and custom
+  storage-error handling are not implemented. There is no settings notice state
+  or alert UI. Keep cart out of the persistence whitelist until user-specific
+  restoration is implemented. Reducing the limit must not remove cart items.
   Category is now shown above the title, and the original numeric rate accompanies
   rounded stars and the parenthesized review count.
 - Follow confirmed policies in the overview: persistent randomly chosen admin,
@@ -56,9 +64,7 @@ Read these documents before planning or changing this project:
 - Use `npm run lint` and `npm run build` for implementation changes, selecting
   smaller checks when sufficient. `npm run dev` starts development;
   `npm run preview` serves the production build.
-- Cart reducer tests use Node's built-in runner:
-  `node --test tests/cartSlice.test.ts` (Node 24 supports TypeScript stripping).
-  No additional test framework is installed.
+- No automated test framework is currently installed.
 - Verify responsive and interactive behavior in a browser; build success alone
   is not evidence that layouts, focus, or drawer cleanup work.
 - Documentation-only edits do not require a build. Check local links and accuracy.

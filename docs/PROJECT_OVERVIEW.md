@@ -23,9 +23,9 @@ The root [AGENTS.md](../AGENTS.md) is the coding-assistant entry point.
 - Extensive use of Material UI, customized primary and secondary theme colors.
 - Plain CSS only; mobile-first rules and MUI CSS cascade layers.
 
-Redux Toolkit and React Redux power the in-memory cart; redux-persist remains unused.
+Redux Toolkit and React Redux power the in-memory cart and product-limit setting.
+redux-persist saves only settings; PersistGate delays rendering until restoration.
 Axios, routing, and additional test frameworks are not installed at this checkpoint.
-Cart reducer tests use Node's built-in test runner.
 Redux Toolkit's default thunk middleware can satisfy the Redux Thunk requirement;
 RTK Query is not the selected asynchronous approach.
 
@@ -80,11 +80,11 @@ RTK Query is not the selected asynchronous approach.
 | Foundation | MUI, Emotion, CSS layers, custom palette/type, CssBaseline | Final visual/browser acceptance |
 | Shell | Header, asset logo, footer, main container, responsive spacing | Full responsive regression pass |
 | Navigation | Context-based page selection; separate desktop/mobile menus | URL router, role-aware navigation |
-| Products | Four local samples, SVG illustrations, reusable card, category, numeric rate, fluid grid | API, request states, browser acceptance |
+| Products | 20 local samples reusing four SVG illustrations, cards, ratings, limited fluid grid | API, request states, final browser acceptance |
 | Cart and login | Account form; Redux cart rows, quantity controls, removal, totals, empty state | Real login, invalid-credentials feedback, per-user cart persistence |
-| Admin | No page yet; selection policy agreed | Slider, role assignment, persistence |
-| State and requests | Navigation context, local drawer state, Redux cart store and typed hooks | API thunks, auth/settings slices, Axios services |
-| Validation | Build/lint during implementation; focused Node cart reducer tests | Broader automated behavior tests and final browser acceptance |
+| Admin | Menu/page preview, integer 10-20 slider, persisted numeric limit | Role assignment, access guards, restored-data validation, actual API limit |
+| State and requests | Navigation context, local UI state, Redux cart/settings slices and typed hooks | API thunks, auth slice, Axios services |
+| Validation | Build/lint during implementation; manual behavior checks | Automated behavior tests and final browser acceptance |
 
 ### Deliberate UI changes and requirement gaps
 
@@ -96,7 +96,18 @@ RTK Query is not the selected asynchronous approach.
   This does not create an authenticated session. Guest access restrictions and
   the login-required dialog must return with real authentication.
 - Cart survives page changes but is in memory only and resets on refresh.
-  Per-user persistence remains required later.
+  Persisting only settings is the agreed minimum for now. Do not introduce a
+  browser-wide saved cart; implement per-user persistence after authentication.
+- Admin navigation/page access is temporarily unrestricted. Its slider controls
+  the number of products, not pages. Draft values stay local; committed values
+  update Redux and redux-persist saves settings to local storage. With no saved
+  setting, show 20 products. The former manual-storage format is ignored; the
+  switch to redux-persist intentionally starts at 20 without migrating that value.
+  The settings reducer rejects invalid committed limits with a RangeError.
+  The current minimal persistence config has no restoration transform, custom
+  error handlers, or settings alerts. Restored values are not currently validated;
+  the default of 20 applies when no setting was saved, not to all invalid data.
+  Cart snapshots are unaffected by changes to the catalogue limit.
 - Cards display rounded stars, the original numeric rate, and review count in
   parentheses. Star rounding does not change the displayed numeric rate.
 - USD is confirmed; keep the existing en-US preview formatting unless changed.
@@ -137,6 +148,8 @@ RTK Query is not the selected asynchronous approach.
   These edge cases do not change the confirmed persistence policies.
 - Guest Add to cart messaging is agreed and implemented as a dialog; keep the
   removed inline caption absent.
+- Add restored-limit validation and review persistence failure handling before
+  treating malformed or unavailable storage as covered.
 
 ## Out of scope initially
 

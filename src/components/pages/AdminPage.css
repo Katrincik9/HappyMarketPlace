@@ -1,0 +1,14 @@
+@layer app {
+  .admin-panel {
+    max-width: 600px;
+  }
+
+  .admin-limit-label {
+    margin-top: 24px;
+    font-weight: 700;
+  }
+
+  .admin-slider {
+    padding: 16px 12px;
+  }
+}

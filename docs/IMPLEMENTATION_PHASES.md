@@ -19,14 +19,14 @@ proposed approach and wait for user approval. Work one agreed step at a time.
 | --- | --- | --- |
 | 1. Foundation/shell | Implemented; final browser acceptance pending | None |
 | 2. Products UI | In progress | Foundation |
-| 3. Remaining interfaces | Account form and interactive cart implemented; Admin/routing pending | Shared shell and UI conventions |
+| 3. Remaining interfaces | Account, cart, and Admin preview implemented; routing pending | Shared shell and UI conventions |
 | 4. Redux/local behavior | Cart store, actions, selectors, and hooks implemented early | Product/cart/settings UI contracts |
 | 5. API/auth | Not started | Redux and agreed session/role policies |
-| 6. Admin integration | Not started | Admin UI, products thunk, settings/auth |
+| 6. Admin integration | Local limit persistence implemented; API/auth integration pending | Admin UI, products thunk, settings/auth |
 | 7. Verification/polish | Incremental checks only; final pass pending | Relevant features implemented |
 
-**Current agreed step:** cart UI and Redux interactions, assuming a logged-in
-demo user temporarily. Minus at one removes the item; Buy is enabled but inert.
+**Current agreed step:** Admin preview with 20 mock products, a 10-20 product
+limit, and local persistence. Admin access checks and API requests remain deferred.
 Catalogue loading/error/empty states remain pending. Confirm subsequent steps
 before implementation.
 
@@ -63,7 +63,7 @@ Do not add product or authentication behavior to finish this phase.
 
 - [x] Define Product and ProductCardProps in the shared types folder.
 - [x] Build a reusable prop-driven ProductCard using MUI.
-- [x] Create four local mock products and local SVG illustrations.
+- [x] Create 20 distinct local mock products reusing four local SVG illustrations.
 - [x] Render cards inside ProductsPage's products grid.
 - [x] Show image, title, description, and formatted preview USD price.
 - [x] Show rounded whole stars using `Math.round`.
@@ -133,10 +133,20 @@ mock data, and temporary requirement omissions are explicitly agreed.
 
 ### 3.3 Admin
 
-- [ ] Create AdminPage and its types only as needed.
-- [ ] Add MUI Slider: minimum 10, maximum 20, step 1, visible selected value.
-- [ ] Explain that the value controls the catalogue request limit.
-- [ ] Preview drag/committed values without persistence or API calls.
+- [x] Create AdminPage and add Admin to desktop/mobile navigation.
+- [x] Add MUI Slider: minimum 10, maximum 20, step 1, visible selected value.
+- [x] Explain that the value controls the product count, not pagination.
+- [x] Keep draft values local and apply committed values to the mock catalogue.
+- [x] Bring forward local persistence as requested; default to 20.
+- [x] Make Admin visible to everyone temporarily; role guards remain deferred.
+- [x] Browser-verify exact 10/15/20 counts, refresh restoration, and cart retention
+  when hiding product 20.
+- [x] Keep settings as a numeric product limit, with no notice state or alerts.
+- [x] Use minimal redux-persist configuration; omit custom transforms and error handlers.
+- [x] Verify Admin menus and slider layout at 300/390/768/1280px.
+- [x] Verify draft-versus-commit persistence and Home/End/arrow keyboard behavior
+  with dispatched pointer/key events. Normal pointer testing remains pending
+  because the shared embedded browser was hidden.
 
 ### 3.4 Navigation previews and routing
 
@@ -178,10 +188,19 @@ mock data, and temporary requirement omissions are explicitly agreed.
 
 ### 4.3 Settings
 
-- [ ] Choose/document an initial limit in the 10-20 range.
-- [ ] Store only committed limit values in Redux.
-- [ ] Reject invalid/out-of-range/noninteger updates using explicit error behavior.
-- [ ] Keep slider dragging local; no API integration until later phases.
+- [x] Choose/document an initial limit: 20.
+- [x] Store only committed limit values in Redux.
+- [x] Reject invalid/out-of-range/noninteger updates using explicit error behavior.
+- [x] Keep slider dragging local; no API integration until later phases.
+- [x] Replace manual product-limit storage/listener with redux-persist and PersistGate.
+- [x] Whitelist only settings; retain the in-memory cart and local form state.
+- [x] Defer cart persistence until authentication supports separate saved carts
+  by stable user ID; do not add a shared browser-wide persisted cart.
+- [x] Start the new persistence format at 20 without migrating the old key.
+- [ ] Validate restored limits; committed-value validation alone does not cover rehydration.
+- [ ] Define persistence failure handling without restoring the removed notice UI.
+- [ ] Review redux-persist lifecycle serializability warnings; default middleware
+  currently has no persistence-action exclusions.
 
 **Done when:** UI interactions work through Redux with mock data and no accidental
 coupling between catalogue visibility and cart contents.
@@ -228,14 +247,16 @@ rewriting presentational layouts or silently swallowing failures.
 
 ## Phase 6 - Admin persistence and integration
 
-- [ ] Read and validate persisted product limit during initialization.
-- [ ] Persist committed slider changes; display an error if saving fails.
+- [x] Restore the persisted product limit before rendering through PersistGate.
+- [x] Persist committed slider changes through redux-persist.
+- [ ] Validate restored data and handle storage failures; custom safeguards were removed.
 - [ ] Refetch with the committed integer using `/products?limit=<value>`.
 - [ ] Avoid one request per drag movement.
 - [ ] Ignore stale responses or cancel superseded work without false error UI.
 - [ ] Make refresh restore the selected limit and use it in the first request.
 - [ ] Keep admin access guarded even when navigating directly.
-- [ ] Verify 10 and 20 boundaries, intermediate integers, and invalid stored data.
+- [ ] Add persistent automated tests for limits, invalid data, and storage failures.
+- [x] Browser-check persistence and boundaries through DOM events.
 - [ ] Verify the actual network URL/params, not just displayed product count.
 - [ ] Add a product to cart, lower the catalogue limit to hide it, and verify
   the cart still shows correct data/quantity/total.
