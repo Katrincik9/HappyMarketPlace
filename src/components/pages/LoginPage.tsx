@@ -60,7 +60,7 @@ function LoginPage() {
             },
           }}
         />
-        <Button type="submit">
+        <Button type="submit" variant="contained">
           Submit
         </Button>
       </form>
