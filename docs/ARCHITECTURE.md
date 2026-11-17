@@ -38,18 +38,17 @@ and admin limit changes call the products API. Do not invent `/admin` requests.
 
 ```text
 src/
-  App.tsx                         shared layout and page-component selection
-  main.tsx                        styling/theme/Redux providers, PersistGate, navigation
+  App.tsx                         shared layout and Routes
+  main.tsx                        styling/theme/Redux providers, PersistGate, BrowserRouter
   theme.ts                        MUI design defaults
   assets/                         logo and sample product SVGs
   components/
     header/                       Header, DesktopNavigation, MobileNavigation
-    pages/                        ProductsPage, CartPage, LoginPage, AdminPage, page CSS
+    pages/                        ProductsPage, CartPage, LoginPage, AdminPage, NotFoundPage
     productCard/                  prop-driven ProductCard and its CSS
     cartItemCard/                 compact cart row and quantity/removal controls
   constants/                      mockProducts and navigationItems
-  context/                        NavigationContext and NavigationProvider
-  hooks/                          useNavigation
+  hooks/                          typed Redux hooks
   types/                          navigationTypes and productTypes
   store/                          Redux store, cart/settings slices, redux-persist config
   services/                       USD formatting
@@ -57,12 +56,12 @@ src/
 
 ### Current UI communication
 
-- `main.tsx` wraps navigation/App in Redux Provider and PersistGate, waiting for
-  saved settings before rendering. NavigationProvider still owns page selection.
-- The provider owns `activePage` and exposes `onNavigate`.
-- `useNavigation` reads the context and throws if used outside its provider.
-- `App` selects the page component from `activePage`.
-- Header and both menus read context directly; menu items are imported constants.
+- `main.tsx` wraps BrowserRouter/App in Redux Provider and PersistGate, waiting
+  for saved settings before rendering.
+- `App` defines Routes inside the shared header/main/footer layout.
+- Header uses Link; both menus render MUI ListItemButton as NavLink. Menu items
+  contain URL paths. Selection is derived with useLocation/matchPath, while
+  NavLink supplies `aria-current` for the active page.
 - `Header` uses MUI `useMediaQuery` to mount one menu at the desktop breakpoint.
 - Mobile navigation owns `menuOpen`. Desktop switching unmounts the drawer,
   resetting its state; scroll-lock/backdrop cleanup needs browser regression tests.
@@ -83,7 +82,7 @@ src/
   manages local field values and required-field errors; `register` connects MUI
   inputs through `inputRef`. Password visibility remains component state.
   Switching pages unmounts the form and discards its state. Valid submission
-  navigates to Products without checking credentials or creating a session.
+  uses useNavigate to open `/products` without checking credentials or creating a session.
   The mock-result selector was removed; invalid-credentials handling is pending.
 - ProductCard dispatches Redux `addItem`. CartPage selects cart items and the
   derived total; CartItemCard dispatches quantity/removal actions.
@@ -92,16 +91,37 @@ src/
 - `main.tsx` provides the Redux store. Cart stores only display snapshots,
   integer unit-price cents, and quantities. It survives page changes but not refresh.
 
-There are no URL routes or API services
-in the current application. The brand is a native `href="/"` link and can reload
-the app; align it with router navigation when routing is introduced.
+API services and route access guards are not implemented. Cart and Admin remain
+unrestricted previews, not authenticated routes.
+
+### URL routes and deployment
+
+| URL | Result |
+| --- | --- |
+| `/` | Redirect to `/products` with history replacement |
+| `/products` | ProductsPage |
+| `/cart` | CartPage |
+| `/admin` | AdminPage |
+| `/account` | LoginPage, labeled Account in navigation |
+| Any unmatched URL | NotFoundPage with a Products link; retain the requested URL |
+
+Use the `react-router` package in declarative BrowserRouter mode. The former
+NavigationContext, NavigationProvider, and custom useNavigation hook are removed.
+Links, logo navigation, and the Account form redirect stay within the same
+document, preserving Redux state. Leaving Account unmounts and resets the form.
+Clicking a mobile link also closes the drawer.
+
+BrowserRouter requires the production host to return `index.html` for app paths,
+including unknown paths, while serving actual assets normally. Vite development
+and preview servers provide this SPA fallback; verify the real hosting setup.
+Restart a running Vite server after installing the router if it cached the
+dependency as missing.
 
 ## 3. State ownership decisions
 
 | State | Owner | Reason |
 | --- | --- | --- |
-| Current page, now | Navigation context | Avoid prop drilling in the current small UI |
-| URL/page, after routing | Router | Supports refresh, links, history, and protected routes |
+| URL/current page | React Router | Supports refresh, links, and history; access guards remain future work |
 | Drawer visibility | MobileNavigation local state | Temporary state used by one component |
 | Form fields, password visibility | Local component state | UI-only input state; never persist passwords |
 | Products/request status | Redux, planned | Shared data and asynchronous lifecycle |
@@ -110,10 +130,8 @@ the app; align it with router navigation when routing is introduced.
 | Committed product limit | Redux settings slice | Shared persisted setting; limits mocks now, API later |
 | Slider draft during dragging | AdminPage local state | Apply/persist only on committed changes |
 
-Navigation context must not grow into a general replacement for required Redux.
-Phase 3's approved direction is to replace active-page context with URL routing.
-Do not maintain a second page-selection state alongside the URL. Router package
-and exact route configuration will be discussed in that implementation plan.
+Do not maintain a second page-selection state alongside the URL, whether in
+context or Redux. Router state and business state have separate responsibilities.
 
 ## 4. Planned Redux and service responsibilities
 

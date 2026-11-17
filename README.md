@@ -9,7 +9,8 @@ and fake authentication using [Fake Store API](https://fakestoreapi.com/).
 
 - MUI theme, plain CSS, and CSS cascade layers configured.
 - Responsive header, logo, mobile/desktop navigation, and shared page layout.
-- Navigation context for switching between Products, Cart, Admin, and Account.
+- React Router navigation for Products, Cart, Admin, and Account, including
+  direct URLs, browser history, active links, and a Page not found screen.
 - Reusable product cards and a responsive grid using 20 local mock products.
 - Account form using React Hook Form for required-field validation, with a
   password visibility toggle.
@@ -37,6 +38,16 @@ npm run dev
 ```
 
 Open the local URL printed by Vite.
+If dependencies change while Vite is running, restart the development server.
+
+## Routes and hosting
+
+- `/products`, `/cart`, `/admin`, `/account`.
+- `/` redirects to `/products`; unknown URLs show Page not found.
+
+For production, configure the host to serve `index.html` for application paths,
+without rewriting real asset requests. This lets direct links and refresh work.
+Cart and Admin routes are not protected yet.
 
 ## Available commands
 

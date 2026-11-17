@@ -19,14 +19,14 @@ proposed approach and wait for user approval. Work one agreed step at a time.
 | --- | --- | --- |
 | 1. Foundation/shell | Implemented; final browser acceptance pending | None |
 | 2. Products UI | In progress | Foundation |
-| 3. Remaining interfaces | Account, cart, and Admin preview implemented; routing pending | Shared shell and UI conventions |
+| 3. Remaining interfaces | Account/cart/Admin routes and not-found screen implemented; role previews pending | Shared shell and UI conventions |
 | 4. Redux/local behavior | Cart store, actions, selectors, and hooks implemented early | Product/cart/settings UI contracts |
 | 5. API/auth | Not started | Redux and agreed session/role policies |
 | 6. Admin integration | Local limit persistence implemented; API/auth integration pending | Admin UI, products thunk, settings/auth |
 | 7. Verification/polish | Incremental checks only; final pass pending | Relevant features implemented |
 
-**Current agreed step:** Admin preview with 20 mock products, a 10-20 product
-limit, and local persistence. Admin access checks and API requests remain deferred.
+**Current agreed step:** replace page-selection context with React Router for
+Products, Cart, Admin, and Account. Access checks and API requests remain deferred.
 Catalogue loading/error/empty states remain pending. Confirm subsequent steps
 before implementation.
 
@@ -40,7 +40,7 @@ before implementation.
 - [x] Define mobile spacing and shared main/footer/header containers.
 - [x] Build Header, local SVG logo, navigation, and main content container.
 - [x] Split mobile/desktop menus and their stylesheets.
-- [x] Use navigation context/hook instead of threading navigation state as props.
+- [x] Share navigation without prop drilling (now handled by React Router).
 - [x] Keep static navigation items separate from shared types.
 - [x] Add tablet sizing and desktop navigation.
 - [x] Enlarge the logo on wider screens.
@@ -151,13 +151,20 @@ mock data, and temporary requirement omissions are explicitly agreed.
 ### 3.4 Navigation previews and routing
 
 - [x] Approve URL routing in Phase 3, replacing page-selection context.
-- [ ] Agree URL routes, router package, and unknown-route behavior.
-- [ ] Replace current page-selection context with router-derived selection.
-- [ ] Use router links for navigation, including the brand, without full reloads.
+- [x] Use React Router BrowserRouter for `/products`, `/cart`, `/admin`, `/account`.
+- [x] Redirect `/` to `/products` with history replacement.
+- [x] Show Page not found for unmatched URLs, with a Products link.
+- [x] Remove page-selection context/provider/hook; derive selection from the URL.
+- [x] Use router links for menus and brand, closing the mobile drawer on selection.
+- [x] Navigate valid Account preview submissions to `/products`.
 - [ ] Preview anonymous, authenticated-user, and admin navigation.
 - [ ] Preview guest/user identity text and Logout as an action, not a required page.
 - [ ] Keep preview roles separate from actual authentication; no implied protection.
-- [ ] Verify refresh, direct links, back/forward, and active navigation indication.
+- [x] Verify refresh, direct links, Back/Forward, active styling, not-found recovery,
+  cart preservation, and Account reset in the production preview via browser DOM events.
+- [x] Verify mobile router links close the drawer and preserve the document.
+- [x] Document the production-host SPA fallback requirement.
+- [ ] Verify normal pointer interactions and the actual production host's fallback.
 
 **Done when:** every required screen/state is reviewable without backend access.
 
@@ -169,7 +176,7 @@ mock data, and temporary requirement omissions are explicitly agreed.
 - [ ] Define products, cart, auth-preview/session, and settings contracts as needed.
 - [ ] Add slices/selectors without API or local-storage side effects in reducers.
 - [ ] Keep input state, drawer state, and slider draft state local.
-- [ ] Keep router/navigation state separate from business-state Redux.
+- [x] Keep router/navigation state separate from business-state Redux.
 
 ### 4.2 Mock catalogue and cart behavior
 

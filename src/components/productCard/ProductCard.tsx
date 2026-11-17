@@ -12,7 +12,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import type { ProductCardProps } from '../../types/productTypes';
-// import { useNavigation } from '../../hooks/useNavigation';
+// import { Link } from 'react-router';
 import { useAppDispatch } from '../../hooks/useStore';
 import { addItem } from '../../store/cartSlice';
 import './ProductCard.css';
@@ -20,7 +20,6 @@ import { formatCurrency } from '../../services/currency';
 
 function ProductCard({ product }: ProductCardProps) {
   // const [loginDialogOpen, setLoginDialogOpen] = useState(false);
-  // const { onNavigate } = useNavigation();
   const dispatch = useAppDispatch();
 
   return (
@@ -67,10 +66,9 @@ function ProductCard({ product }: ProductCardProps) {
           <Button onClick={() => setLoginDialogOpen(false)}>Cancel</Button>
           <Button
             variant="contained"
-            onClick={() => {
-              setLoginDialogOpen(false);
-              onNavigate('login');
-            }}
+            component={Link}
+            to="/account"
+            onClick={() => setLoginDialogOpen(false)}
           >
             Log in
           </Button>

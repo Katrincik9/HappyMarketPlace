@@ -9,11 +9,11 @@ import ListItemText from '@mui/material/ListItemText';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import { navigationItems } from '../../constants/navigationItems';
-import { useNavigation } from '../../hooks/useNavigation';
+import { matchPath, NavLink, useLocation } from 'react-router';
 import './MobileNavigation.css';
 
 function MobileNavigation() {
-  const { activePage, onNavigate } = useNavigation();
+  const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -31,12 +31,14 @@ function MobileNavigation() {
         <Typography className="drawer-description">Guest</Typography>
         <Divider />
         <List component="nav" id="mobile-navigation">
-          {navigationItems.map(({ page, label }) => (
-            <ListItemButton key={page} selected={activePage === page}
-              onClick={() => {
-                onNavigate(page);
-                setMenuOpen(false);
-              }}
+          {navigationItems.map(({ path, label }) => (
+            <ListItemButton
+              key={path}
+              component={NavLink}
+              to={path}
+              end
+              selected={!!matchPath({ path, end: true }, pathname)}
+              onClick={() => setMenuOpen(false)}
             >
               <ListItemText primary={label} />
             </ListItemButton>

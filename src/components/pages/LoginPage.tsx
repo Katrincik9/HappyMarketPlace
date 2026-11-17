@@ -7,12 +7,12 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useNavigation } from '../../hooks/useNavigation';
+import { useNavigate } from 'react-router';
 import './Pages.css';
 import './LoginPage.css';
 
 function LoginPage() {
-  const { onNavigate } = useNavigation();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
@@ -26,7 +26,7 @@ function LoginPage() {
       <Typography component="h1" variant="h5" className="section-heading">
         Your account
       </Typography>
-      <form className="login-form" onSubmit={handleSubmit(() => onNavigate('products'))} noValidate>
+      <form className="login-form" onSubmit={handleSubmit(() => navigate('/products'))} noValidate>
         <TextField
           {...register("username", {
             required: "Enter your username",

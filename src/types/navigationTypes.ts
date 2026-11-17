@@ -1,11 +1,6 @@
-export type NavigationPage = 'products' | 'cart' | 'login' | 'admin';
+export type NavigationPath = '/products' | '/cart' | '/admin' | '/account';
 
 export type NavigationItem = {
-  page: NavigationPage;
+  path: NavigationPath;
   label: string;
-};
-
-export type NavigationContextValue = {
-  activePage: NavigationPage;
-  onNavigate: (page: NavigationPage) => void;
 };

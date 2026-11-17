@@ -25,7 +25,8 @@ The root [AGENTS.md](../AGENTS.md) is the coding-assistant entry point.
 
 Redux Toolkit and React Redux power the in-memory cart and product-limit setting.
 redux-persist saves only settings; PersistGate delays rendering until restoration.
-Axios, routing, and additional test frameworks are not installed at this checkpoint.
+React Router handles URL navigation. Axios and additional test frameworks are
+not installed at this checkpoint.
 Redux Toolkit's default thunk middleware can satisfy the Redux Thunk requirement;
 RTK Query is not the selected asynchronous approach.
 
@@ -79,11 +80,11 @@ RTK Query is not the selected asynchronous approach.
 | --- | --- | --- |
 | Foundation | MUI, Emotion, CSS layers, custom palette/type, CssBaseline | Final visual/browser acceptance |
 | Shell | Header, asset logo, footer, main container, responsive spacing | Full responsive regression pass |
-| Navigation | Context-based page selection; separate desktop/mobile menus | URL router, role-aware navigation |
+| Navigation | React Router, desktop/mobile links, active styling, root redirect, not-found page | Role-aware navigation, protected routes, production-host verification |
 | Products | 20 local samples reusing four SVG illustrations, cards, ratings, limited fluid grid | API, request states, final browser acceptance |
 | Cart and login | Account form; Redux cart rows, quantity controls, removal, totals, empty state | Real login, invalid-credentials feedback, per-user cart persistence |
 | Admin | Menu/page preview, integer 10-20 slider, persisted numeric limit | Role assignment, access guards, restored-data validation, actual API limit |
-| State and requests | Navigation context, local UI state, Redux cart/settings slices and typed hooks | API thunks, auth slice, Axios services |
+| State and requests | URL-owned navigation, local UI state, Redux cart/settings slices and typed hooks | API thunks, auth slice, Axios services |
 | Validation | Build/lint during implementation; manual behavior checks | Automated behavior tests and final browser acceptance |
 
 ### Deliberate UI changes and requirement gaps
@@ -98,6 +99,10 @@ RTK Query is not the selected asynchronous approach.
 - Cart survives page changes but is in memory only and resets on refresh.
   Persisting only settings is the agreed minimum for now. Do not introduce a
   browser-wide saved cart; implement per-user persistence after authentication.
+- React Router replaces page-selection context. Routes are `/products`, `/cart`,
+  `/admin`, and `/account`; `/` redirects to `/products`. Unknown URLs show a
+  not-found screen with a Products link. Navigation and logo links do not reload
+  the app, preserving the in-memory cart. Account inputs reset when leaving.
 - Admin navigation/page access is temporarily unrestricted. Its slider controls
   the number of products, not pages. Draft values stay local; committed values
   update Redux and redux-persist saves settings to local storage. With no saved
@@ -135,14 +140,14 @@ RTK Query is not the selected asynchronous approach.
    Cart, denies access/additions, and clears the active cart from view without
    deleting saved carts. Logging in restores only that user's cart.
 4. **Currency:** use USD; the existing en-US formatting can remain.
-5. **Routing:** introduce URL routing in Phase 3 and replace current page-selection
-   context. The URL will be the source of truth for page selection, including
-   refresh and browser history.
+5. **Routing (implemented):** React Router's BrowserRouter owns page selection,
+   including direct URLs, refresh, and browser history. The former navigation
+   context is removed; do not duplicate page state in Redux.
 
 ### Remaining implementation details and UI deferrals
 
-- Choose the router package, exact routes, and unknown-route behavior in the
-  Phase 3 plan; the migration itself is approved.
+- Configure and verify the production host's SPA fallback for direct URLs and
+  refresh. Cart/Admin access restrictions still depend on authentication.
 - Define session payload validation and handling of malformed/expired sessions,
   and what to do if a persisted admin ID no longer exists in fetched users.
   These edge cases do not change the confirmed persistence policies.
