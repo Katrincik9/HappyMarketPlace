@@ -230,7 +230,9 @@ coupling between catalogue visibility and cart contents.
 - [ ] Add Axios after updating the dependency manifest.
 - [ ] Create shared Axios client and typed products/auth API services.
 - [ ] Verify actual endpoint payloads; do not assume login returns a full user.
-- [ ] Add API-to-app mapping only where shapes/semantics differ.
+- [ ] Define separate API contracts and application models; require explicit
+  API-to-app mapping for every successful response, even when shapes match.
+- [ ] Verify only mapped application data reaches Redux and the UI.
 - [ ] Implement async operations with Redux Toolkit thunks.
 
 ### 5.2 Real catalogue

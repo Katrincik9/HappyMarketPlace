@@ -98,18 +98,21 @@ RTK Query is not the selected asynchronous approach.
   A login-required dialog now explains the restriction after clicking the button.
 - Current approved exception: assume a logged-in demo user while implementing
   the cart. Add to cart directly updates Redux without the guest dialog.
-  This does not create an authenticated session. Guest access restrictions and
-  the login-required dialog must return with real authentication.
+  This does not create an authenticated session; do not persist a fabricated
+  session to represent the preview. Guest access restrictions and the
+  login-required dialog must return with real authentication.
 - Cart survives page changes but is in memory only and resets on refresh.
-  Persisting only settings is the agreed minimum for now. Do not introduce a
-  browser-wide saved cart; implement per-user persistence after authentication.
+  Account form fields are also not persisted. Persisting only settings is the
+  agreed minimum for now. Do not introduce a browser-wide saved cart; implement
+  per-user persistence after authentication.
 - React Router replaces page-selection context. Routes are `/products`, `/cart`,
   `/admin`, and `/account`; `/` redirects to `/products`. Unknown URLs show a
   not-found screen with a Products link. Navigation and logo links do not reload
   the app, preserving the in-memory cart. Account inputs reset when leaving.
 - Admin navigation/page access is temporarily unrestricted. Its slider controls
-  the number of products, not pages. Draft values stay local; committed values
-  update Redux and redux-persist saves settings to local storage. With no saved
+  the number of products, not pages. Draft values stay local during dragging;
+  releasing the slider commits the value to Redux, and redux-persist saves
+  settings to local storage. Committed keyboard changes also update Redux. With no saved
   setting, show 20 products. The former manual-storage format is ignored; the
   switch to redux-persist intentionally starts at 20 without migrating that value.
   The settings reducer rejects invalid committed limits with a RangeError.

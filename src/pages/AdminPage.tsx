@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
-import { useAppDispatch, useAppSelector } from '../../hooks/useStore';
-import { setProductLimit } from '../../store/settingsSlice';
+import { useAppDispatch, useAppSelector } from '../hooks/useStore';
+import { setProductLimit } from '../store/settingsSlice';
 import './Pages.css';
 import './AdminPage.css';
-import { MAX_PRODUCT_LIMIT, MIN_PRODUCT_LIMIT } from '../../constants/productLimit';
+import { MAX_PRODUCT_LIMIT, MIN_PRODUCT_LIMIT } from '../constants/productLimit';
 
 function AdminPage() {
   const dispatch = useAppDispatch();

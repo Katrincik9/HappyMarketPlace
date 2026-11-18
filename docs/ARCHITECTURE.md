@@ -22,7 +22,8 @@ Frontend
         v
   API service -> Axios client -> Backend (Fake Store API)
         |
-        | response -> optional API-to-app mapping -> fulfilled/rejected action
+        | response -> mandatory API-to-app mapping -> fulfilled action
+        | request/mapping failure -> rejected action
         v
   Reducer -> Redux state -> selector -> React UI
 
@@ -42,10 +43,10 @@ src/
   main.tsx                        styling/theme/Redux providers, PersistGate, BrowserRouter
   theme.ts                        MUI design defaults
   assets/                         logo and sample product SVGs
-  components/
+  components/                     reusable UI components only
     header/                       Header, DesktopNavigation, MobileNavigation
-    pages/                        ProductsPage, CartPage, LoginPage, AdminPage, NotFoundPage
     productCard/                  shared catalogue/cart ProductCard and container-query CSS
+  pages/                          ProductsPage, CartPage, LoginPage, AdminPage, and page styles
   constants/                      mockProducts and navigationItems
   hooks/                          typed Redux hooks
   types/                          navigation types; Product and CartItem in productTypes
@@ -66,7 +67,9 @@ src/
   resetting its state; scroll-lock/backdrop cleanup needs browser regression tests.
 - ProductsPage maps the first `settings` samples (the numeric product limit) to `ProductCard`
   props. There are 20 distinct mock entries reusing four local illustrations.
-- AdminPage owns the slider draft and dispatches committed integer changes.
+- AdminPage owns the slider draft. Slider `onChange` updates only the local
+  preview; `onChangeCommitted` dispatches integer changes on release or committed
+  keyboard input, rather than persisting every drag update.
   redux-persist wraps the combined root reducer with a settings-only whitelist;
   reducers never access storage. PersistGate waits for restoration before the
   first app render. Settings state is a number, not an object; its reducer
@@ -154,7 +157,8 @@ required thunk-based flow.
 - **Thunks:** coordinate requests and state, propagate meaningful errors, manage
   stale/cancelled requests where needed.
 - **API services:** own endpoint paths, parameters, Axios request/response types.
-  Return data or errors; do not dispatch, navigate, or render notifications.
+  Map successful responses to application models before returning them. Propagate
+  errors; do not dispatch, navigate, or render notifications.
 - **Axios client:** one shared base configuration. Add token/interceptor behavior
   only if an actual endpoint requires it.
 - **Reducers:** deterministic state transitions; no HTTP, storage, or randomness.
@@ -195,8 +199,11 @@ whitelist would also opt future root slices into persistence unintentionally.
 ## 5. API models versus application models
 
 `ApiUser` describes the backend payload; `AppUser` describes frontend needs.
-Map at the service boundary when field names, nesting, or semantics differ.
-Do not expose password fields in application session state.
+API-to-app mapping is mandatory at the service boundary, even when field names,
+nesting, and semantics currently match. Keep API response contracts separate
+from application models and use explicit mapping functions. Only mapped
+application data may reach Redux and the UI; do not expose password fields in
+application session state.
 
 Fake Store API login returns a token, not a full user record or admin role.
 Use a login-response type; do not assume the diagram's `ApiUser` comes from login.
@@ -206,10 +213,11 @@ maps to a stable user ID; do not infer identity merely from submitted credential
 or retain API password fields. The demo role is frontend-assigned and cannot
 provide real authorization.
 
-The existing Product type follows the product payload fields, including
-`rating.rate` and `rating.count`. Reuse it if suitable; do not duplicate identical
-API/app types just to create a mapping layer. Validate important response
-assumptions and keep error handling explicit.
+The existing Product type is the application model. When product API integration
+is implemented, define an API response contract and explicitly map it to Product,
+including `rating.rate` and `rating.count`, even if the shapes match. Validate
+important response assumptions and keep mapping errors explicit. API contracts
+and mappers are planned work, not implemented features.
 
 ## 6. Styling and responsive decisions
 
@@ -222,8 +230,10 @@ assumptions and keep error handling explicit.
   app-layer declarations outrank normal MUI-layer declarations. Unlayered normal
   styles outrank both; avoid accidental unlayered overrides and routine `!important`.
 - `CssBaseline` supplies theme-aware global defaults; avoid duplicating its reset.
+- Reserve `src/components` for reusable UI components; route-level pages and
+  their styles live in `src/pages`.
 - Keep Header, MobileNavigation, DesktopNavigation, and ProductCard CSS next to
-  their components. Shared page heading styles are in `components/pages/Pages.css`.
+  their components. Shared page heading styles are in `pages/Pages.css`.
 - Header/main/footer use aligned `maxWidth="lg"` containers
   with explicit CSS padding rather than MUI gutters.
 

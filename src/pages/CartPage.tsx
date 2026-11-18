@@ -1,8 +1,8 @@
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import ProductCard from '../productCard/ProductCard';
-import { useAppSelector } from '../../hooks/useStore';
-import { calculateTotal, usdFormatter } from '../../services/currency';
+import ProductCard from '../components/productCard/ProductCard';
+import { useAppSelector } from '../hooks/useStore';
+import { calculateTotal, usdFormatter } from '../services/currency';
 import './Pages.css';
 import './CartPage.css';
 

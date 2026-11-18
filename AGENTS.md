@@ -18,30 +18,13 @@ Read these documents before planning or changing this project:
   Do not treat roadmap entries as permission to implement them.
 - Implement one agreed step at a time. Do not implement an entire future phase
   because it appears in the roadmap.
-- Follow the UI-first sequence. Redux and Redux Thunk remain requirements;
-  keep URL navigation in React Router and business state in Redux.
+- Follow the agreed UI-first sequence and implementation phases.
 - Distinguish implemented code from planned architecture and pending verification.
   An installed dependency is not an implemented feature.
-- Preserve deliberate UI choices: the anonymous login caption is removed.
-  For the current cart preview, assume a logged-in demo user and add directly
-  through Redux. This is not authentication; do not persist a fabricated session.
-  When real authentication is added, restore the agreed guest login dialog with
-  Cancel and Log in actions instead of allowing guest cart additions.
-  Cart minus at quantity 1 removes the item. Buy is enabled but has no action.
-  Admin is temporarily visible to everyone. Its 10-20 product-limit slider
-  defaults to 20, commits on release, and persists through redux-persist.
-  Only settings is persisted; cart and form fields are not. PersistGate waits
-  for restoration before rendering. Settings state is a numeric product limit.
-  The reducer validates committed changes; restored-data validation and custom
-  storage-error handling are not implemented. There is no settings notice state
-  or alert UI. Keep cart out of the persistence whitelist until user-specific
-  restoration is implemented. Reducing the limit must not remove cart items.
-  Category is now shown above the title, and the original numeric rate accompanies
-  rounded stars and the parenthesized review count.
-- Follow confirmed policies in the overview: persistent randomly chosen admin,
-  refresh-restored login, per-user persisted carts, USD, and URL-based navigation.
-  Discuss remaining edge cases, not these
-  settled policies, before their implementation.
+- Preserve the confirmed behavior, deliberate exceptions, and decisions
+  documented in the project overview and architecture.
+- Discuss unresolved edge cases before implementation rather than reopening
+  settled policies.
 
 ## Repository conventions
 
@@ -49,7 +32,8 @@ Read these documents before planning or changing this project:
 - Keep application styles inside `@layer app`; MUI's `mui` layer is ordered first.
 - Keep component CSS beside its component. Header, mobile navigation, and
   desktop navigation have separate stylesheets.
-- Page components live in `src/components/pages`.
+- Keep only reusable UI components in `src/components`. Page components and
+  their styles live separately in `src/pages`.
 - Shared types live in `src/types`; static menu/sample data live in
   `src/constants`; logo and sample illustrations live in `src/assets`.
 - Use React Router's BrowserRouter with `/products`, `/cart`, `/admin`, and
@@ -76,6 +60,8 @@ Read these documents before planning or changing this project:
   Keep unresolved decisions and temporarily deferred requirements explicit.
 - Update architecture decisions when boundaries change. Keep the README as an
   overview of purpose, progress, and run commands, with links to detailed docs.
-- Keep implementation context in AGENTS.md and docs, not only in chat history.
+- Keep AGENTS.md focused on working instructions. Record requirements,
+  implementation context, and decisions in the linked project documents,
+  not only in chat history.
   Document responsive intent and breakpoint roles rather than copying mutable
   CSS dimensions. Current source code is the authority for exact styling values.

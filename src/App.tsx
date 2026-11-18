@@ -2,10 +2,10 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Header from './components/header/Header';
 import { Navigate, Route, Routes } from 'react-router';
-import ProductsPage from './components/pages/ProductsPage';
-import CartPage from './components/pages/CartPage';
-import LoginPage from './components/pages/LoginPage';
-import AdminPage from './components/pages/AdminPage';
+import ProductsPage from './pages/ProductsPage';
+import CartPage from './pages/CartPage';
+import LoginPage from './pages/LoginPage';
+import AdminPage from './pages/AdminPage';
 import './App.css';
 
 function App() {

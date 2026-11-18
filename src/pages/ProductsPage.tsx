@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography';
-import ProductCard from '../productCard/ProductCard';
-import { mockProducts } from '../../constants/mockProducts';
-import { useAppSelector } from '../../hooks/useStore';
+import ProductCard from '../components/productCard/ProductCard';
+import { mockProducts } from '../constants/mockProducts';
+import { useAppSelector } from '../hooks/useStore';
 import './ProductsPage.css';
 import './Pages.css';
 
