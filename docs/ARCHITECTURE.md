@@ -45,13 +45,12 @@ src/
   components/
     header/                       Header, DesktopNavigation, MobileNavigation
     pages/                        ProductsPage, CartPage, LoginPage, AdminPage, NotFoundPage
-    productCard/                  prop-driven ProductCard and its CSS
-    cartItemCard/                 compact cart row and quantity/removal controls
+    productCard/                  shared catalogue/cart ProductCard and container-query CSS
   constants/                      mockProducts and navigationItems
   hooks/                          typed Redux hooks
-  types/                          navigationTypes and productTypes
+  types/                          navigation types; Product and CartItem in productTypes
   store/                          Redux store, cart/settings slices, redux-persist config
-  services/                       USD formatting
+  services/                       cart total calculation and USD formatting
 ```
 
 ### Current UI communication
@@ -84,12 +83,23 @@ src/
   Switching pages unmounts the form and discards its state. Valid submission
   uses useNavigate to open `/products` without checking credentials or creating a session.
   The mock-result selector was removed; invalid-credentials handling is pending.
-- ProductCard dispatches Redux `addItem`. CartPage selects cart items and the
-  derived total; CartItemCard dispatches quantity/removal actions.
+- Both pages render ProductCard with a typed `variant` prop. The `catalogue`
+  variant receives a Product, shows rating/description, and dispatches `addItem`.
+  The `cart` variant receives a CartItem snapshot and dispatches quantity/removal
+  actions. Image, category, title, and unit-price markup are shared; cart items
+  do not need catalogue-only fields. CartPage selects items and the derived total.
+- ProductCard renders a single article root without a wrapper. The cart list
+  establishes the named inline-size container for its cards. Cart cards stack
+  image and details in narrow containers and place them side by side in wider
+  containers, independent of viewport width. The cart remains one item per list
+  row, and catalogue cards remain vertical.
 - For this approved preview, assume a logged-in demo user. No real session or
   guest checks exist yet; restore the guest login dialog when auth is connected.
 - `main.tsx` provides the Redux store. Cart stores only display snapshots,
-  integer unit-price cents, and quantities. It survives page changes but not refresh.
+  including Product's `price` in dollars, and quantities. It survives page
+  changes but not refresh. The shared `calculateTotal` helper sums integer
+  cents internally and returns dollars for both line subtotals and the cart
+  total. Individual prices are formatted directly with `usdFormatter`.
 
 API services and route access guards are not implemented. Cart and Admin remain
 unrestricted previews, not authenticated routes.

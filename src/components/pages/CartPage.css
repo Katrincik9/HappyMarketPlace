@@ -1,4 +1,11 @@
 @layer app {
+  .cart-items {
+    container: cart-items / inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
   .cart-summary {
     padding: 10px 20px;
   }

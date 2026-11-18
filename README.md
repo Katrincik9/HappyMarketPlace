@@ -11,7 +11,9 @@ and fake authentication using [Fake Store API](https://fakestoreapi.com/).
 - Responsive header, logo, mobile/desktop navigation, and shared page layout.
 - React Router navigation for Products, Cart, Admin, and Account, including
   direct URLs, browser history, active links, and a Page not found screen.
-- Reusable product cards and a responsive grid using 20 local mock products.
+- Shared ProductCard with catalogue/cart variants and a responsive catalogue
+  grid using 20 local mock products. Cart cards stack in narrow containers and
+  use a side-by-side layout in wider containers.
 - Account form using React Hook Form for required-field validation, with a
   password visibility toggle.
 - Redux cart with one product per row, quantity controls, deletion, subtotals,

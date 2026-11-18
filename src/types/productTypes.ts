@@ -11,6 +11,6 @@ export type Product = {
   };
 };
 
-export type ProductCardProps = {
-  product: Product;
+export type CartItem = Pick<Product, 'id' | 'title' | 'category' | 'image' | 'price'> & {
+  quantity: number;
 };

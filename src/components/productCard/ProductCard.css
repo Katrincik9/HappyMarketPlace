@@ -44,4 +44,41 @@
   .product-cart-button {
     margin: 0 20px 20px;
   }
+
+  .product-card--cart .product-image {
+    height: 180px;
+    padding: 12px;
+    object-fit: contain;
+  }
+
+  .product-cart-controls,
+  .product-quantity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .product-quantity {
+    border: 1px solid #d5dfd9;
+    border-radius: 8px;
+  }
+
+  .product-subtotal {
+    font-weight: 700;
+  }
+
+  @container cart-items (min-width: 500px) {
+    .product-card--cart {
+      flex-direction: row;
+    }
+
+    .product-card--cart .product-image {
+      width: 160px;
+      height: auto;
+    }
+
+    .product-card--cart .product-cart-controls {
+      gap: 20px;
+    }
+  }
 }

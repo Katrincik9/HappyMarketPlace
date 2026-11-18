@@ -14,7 +14,7 @@ function ProductsPage() {
       </Typography>
       <div className="products-grid">
         {mockProducts.slice(0, productLimit).map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product.id} variant="catalogue" product={product} />
         ))}
       </div>
     </section>

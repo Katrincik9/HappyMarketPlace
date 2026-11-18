@@ -121,15 +121,23 @@ mock data, and temporary requirement omissions are explicitly agreed.
 
 - [x] Create a separate CartPage with heading.
 - [x] Build compact rows with image/category/title, unit price, quantity, and subtotal.
+- [x] Share ProductCard between catalogue and cart with typed variant-specific
+  props; replace the separate CartItemCard implementation.
 - [x] Show cart total and an empty-cart state.
 - [x] Omit rating, description, and Add to cart from cart rows.
 - [x] Add plus/minus controls and a delete icon; minus at one removes the item.
 - [x] Keep one product per row in a vertical list.
+- [x] Use container queries for stacked cart-card content below 500px and
+  side-by-side content at 500px and above; keep catalogue cards vertical.
 - [x] Keep Buy enabled with no action as requested; explain checkout is not implemented.
 - [x] Verify responsive rows at 300/390/768/1280px and browser DOM-event flows
   for additions, quantities, totals, deletion, enabled inert Buy, and empty state.
   Normal pointer/resize checks remain pending: the embedded browser was hidden
   and required dispatched click events and reloads at each viewport.
+- [x] Use the existing cart list as the query container, without card wrappers.
+- [x] Verify the exact 499/500/501px cart-list container threshold and a
+  narrow container in a wide viewport; repeat DOM-event cart interactions and
+  overflow/control-fit checks at 300/390/768/1280px after the refactor.
 
 ### 3.3 Admin
 
@@ -184,6 +192,9 @@ mock data, and temporary requirement omissions are explicitly agreed.
 - [ ] Add a typed Add to cart intent; check authenticated/demo-preview eligibility.
 - [x] Increment quantity on repeated additions using product identity.
 - [x] Store cart display snapshots independent of currently visible products.
+- [x] Reuse Product's `price` in cart snapshots instead of a separate
+  `unitPriceCents` field. Share `calculateTotal` for subtotals and the cart total;
+  sum cents internally, return dollars, and use `usdFormatter` directly for display.
 - [x] Derive line totals and total; calculate money in integer cents.
 - [x] Connect CartPage and empty state to selectors.
 - [x] Add focused Node reducer tests for repeated adds, quantity controls,

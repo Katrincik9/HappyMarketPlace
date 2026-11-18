@@ -1,6 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { CartItem } from '../types/cartTypes';
-import type { Product } from '../types/productTypes';
+import type { CartItem, Product } from '../types/productTypes';
 
 const initialState: CartItem[] = [];
 
@@ -18,7 +17,7 @@ const cartSlice = createSlice({
           title: product.title,
           category: product.category,
           image: product.image,
-          unitPriceCents: Math.round(product.price * 100),
+          price: product.price,
           quantity: 1,
         });
       }

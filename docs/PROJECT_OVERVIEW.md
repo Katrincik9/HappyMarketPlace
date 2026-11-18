@@ -44,11 +44,15 @@ RTK Query is not the selected asynchronous approach.
 ### Cart
 
 - Show added products in a compact form, without an Add to cart button.
+- Reuse ProductCard for catalogue and cart content through typed variant props.
 - Repeated additions increment quantity rather than duplicate product rows.
 - Show quantity per item and a total based on unit price times quantity.
 - Include plus/minus quantity controls and a delete icon. Minus at one removes
   the item. Show image, category, title, unit price, and subtotal in one row per
   product; omit rating and description.
+- Use container queries to stack each cart card's image/details in narrow
+  containers and place them side by side in wider containers. Keep catalogue
+  cards vertical.
 - Show an enabled Buy control without checkout functionality initially.
 - Backend cart endpoints are not required for this scope.
 - Persist a separate cart per user across logout/login and refresh. Hide Cart
